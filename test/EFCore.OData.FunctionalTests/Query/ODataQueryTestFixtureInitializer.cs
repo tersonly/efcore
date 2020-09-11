@@ -24,7 +24,6 @@ namespace Microsoft.EntityFrameworkCore.Query
             IEdmModel edmModel)
             where TContext : DbContext
         {
-            //SecurityHelper.AddIpListen();
             var port = PortArranger.Reserve();
             var baseAddress = string.Format("http://localhost:{0}", port.ToString());
 

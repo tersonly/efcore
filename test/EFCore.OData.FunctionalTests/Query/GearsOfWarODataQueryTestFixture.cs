@@ -66,10 +66,11 @@ namespace Microsoft.EntityFrameworkCore.Query
         {
             if (_selfHostServer != null)
             {
-                var stopTask = _selfHostServer.StopAsync();
-                stopTask.Wait();
-                var waitTask = _selfHostServer.WaitForShutdownAsync();
-                waitTask.Wait();
+                //issue: dotnet/runtime #35990
+                _selfHostServer.StopAsync();
+                System.Threading.Thread.Sleep(5000);
+                _selfHostServer.Dispose();
+                //_selfHostServer.WaitForShutdown();
 
                 _selfHostServer = null;
             }

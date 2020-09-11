@@ -3,8 +3,14 @@
 
 using System;
 using System.Net.Http;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Routing;
+using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.EntityFrameworkCore.TestModels.ComplexNavigationsModel;
+using Microsoft.EntityFrameworkCore.TestUtilities;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OData.Edm;
 
@@ -30,6 +36,26 @@ namespace Microsoft.EntityFrameworkCore.Query
                 = ODataQueryTestFixtureInitializer.Initialize<ComplexNavigationsODataContext>(StoreName, controllers, GetEdmModel());
         }
 
+        public void UpdateConfigureServices<TContext>(IServiceCollection services, string storeName)
+            where TContext : DbContext
+        {
+            services.AddDbContext<TContext>(b =>
+                b.UseSqlServer(
+                    SqlServerTestStore.CreateConnectionString(storeName)));
+        }
+
+        protected void UpdateConfigure(EndpointRouteConfiguration configuration, Type[] controllers, IEdmModel edmModel)
+        {
+            configuration.AddControllers(controllers);
+            configuration.MaxTop(2).Expand().Select().OrderBy().Filter();
+
+            configuration.MapODataRoute("odata", "odata",
+                edmModel,
+                new DefaultODataPathHandler(),
+                ODataRoutingConventions.CreateDefault(),
+                new DefaultODataBatchHandler());
+        }
+
         private static IEdmModel GetEdmModel()
         {
             var modelBuilder = new ODataConventionModelBuilder();
@@ -49,10 +75,11 @@ namespace Microsoft.EntityFrameworkCore.Query
         {
             if (_selfHostServer != null)
             {
-                var stopTask = _selfHostServer.StopAsync();
-                stopTask.Wait();
-                var waitTask = _selfHostServer.WaitForShutdownAsync();
-                waitTask.Wait();
+                //issue: dotnet/runtime #35990
+                _selfHostServer.StopAsync();
+                System.Threading.Thread.Sleep(5000);
+                _selfHostServer.Dispose();
+                //_selfHostServer.WaitForShutdown();
 
                 _selfHostServer = null;
             }
