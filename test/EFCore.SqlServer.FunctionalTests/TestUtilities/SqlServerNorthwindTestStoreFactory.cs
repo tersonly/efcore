@@ -14,7 +14,7 @@ namespace Microsoft.EntityFrameworkCore.TestUtilities
         }
 
         public override TestStore GetOrCreate(string storeName)
-            //=> SqlServerTestStore.GetOrCreate(storeName, "Northwind.sql");
-            => SqlServerTestStore.GetOrCreate(Name, "Northwind.sql");
+            => SqlServerTestStore.GetOrCreate(storeName, "Northwind.sql");
+            //=> SqlServerTestStore.GetOrCreate(Name, "Northwind.sql");
     }
 }
