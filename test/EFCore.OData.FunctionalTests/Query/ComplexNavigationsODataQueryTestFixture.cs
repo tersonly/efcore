@@ -49,8 +49,11 @@ namespace Microsoft.EntityFrameworkCore.Query
         {
             if (_selfHostServer != null)
             {
-                _selfHostServer.StopAsync();
-                _selfHostServer.WaitForShutdownAsync();
+                var stopTask = _selfHostServer.StopAsync();
+                stopTask.Wait();
+                var waitTask = _selfHostServer.WaitForShutdownAsync();
+                waitTask.Wait();
+
                 _selfHostServer = null;
             }
         }

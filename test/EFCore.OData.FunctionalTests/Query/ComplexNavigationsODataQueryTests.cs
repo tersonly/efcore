@@ -17,36 +17,36 @@ namespace Microsoft.EntityFrameworkCore.Query
         {
         }
 
-        [ConditionalFact]
-        public async Task Query_level_ones()
-        {
-            var requestUri = string.Format("{0}/odata/LevelOne", BaseAddress);
-            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            var response = await Client.SendAsync(request);
+        //[ConditionalFact]
+        //public async Task Query_level_ones()
+        //{
+        //    var requestUri = string.Format("{0}/odata/LevelOne", BaseAddress);
+        //    var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        //    var response = await Client.SendAsync(request);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = await response.Content.ReadAsObject<JObject>();
+        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        //    var result = await response.Content.ReadAsObject<JObject>();
 
-            Assert.Contains("$metadata#LevelOne", result["@odata.context"].ToString());
-            var levelOnes = result["value"] as JArray;
+        //    Assert.Contains("$metadata#LevelOne", result["@odata.context"].ToString());
+        //    var levelOnes = result["value"] as JArray;
 
-            Assert.Equal(13, levelOnes.Count);
-        }
+        //    Assert.Equal(13, levelOnes.Count);
+        //}
 
-        [ConditionalFact]
-        public async Task Query_level_threes()
-        {
-            var requestUri = string.Format("{0}/odata/LevelThree", BaseAddress);
-            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            var response = await Client.SendAsync(request);
+        //[ConditionalFact]
+        //public async Task Query_level_threes()
+        //{
+        //    var requestUri = string.Format("{0}/odata/LevelThree", BaseAddress);
+        //    var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+        //    var response = await Client.SendAsync(request);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var result = await response.Content.ReadAsObject<JObject>();
+        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        //    var result = await response.Content.ReadAsObject<JObject>();
 
-            Assert.Contains("$metadata#LevelThree", result["@odata.context"].ToString());
-            var levelThrees = result["value"] as JArray;
+        //    Assert.Contains("$metadata#LevelThree", result["@odata.context"].ToString());
+        //    var levelThrees = result["value"] as JArray;
 
-            Assert.Equal(10, levelThrees.Count);
-        }
+        //    Assert.Equal(10, levelThrees.Count);
+        //}
     }
 }
